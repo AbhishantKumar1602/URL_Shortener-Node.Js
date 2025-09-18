@@ -4,7 +4,8 @@ const URL = require('../models/url');
 
 async function createNewUrl (req, res) {
      const body = req.body;
-     if (!body.url) return res.status(400).json({ error: 'URL is required' });
+     if (!body.url) 
+          return res.status(400).json({ error: 'URL is required' });
      try {
           // First, check if this URL already exists for this user to prevent duplicates.
           const existingUrl = await URL.findOne({
@@ -13,7 +14,6 @@ async function createNewUrl (req, res) {
           });
 
           if (existingUrl) {
-               // If it already exists, inform the user and don't create a new one.
                return res.status(409).json({ error: 'URL already has a shortened ID for you.' });
           }
 
@@ -30,15 +30,10 @@ async function createNewUrl (req, res) {
                urls: allUrls
           });
      } catch (error) {
-          if (error.code === 11000) { // E11000 duplicate key error
-               // This can happen in a race condition or if the shortId is not unique.
+          if (error.code === 11000) { 
                if (error.keyPattern && error.keyPattern.shortId) {
-                    // This is a shortId collision. It's rare, but we should handle it.
-                    // A simple solution is to ask the user to try again.
                     return res.status(500).json({ error: 'Failed to generate a unique ID. Please try again.' });
                }
-               // This is for the compound index on (redirectionUrl, createdBy)
-               // which might be hit in a race condition.
                return res.status(409).json({ error: 'URL already has a shortened ID for you.' });
           }
           console.error(error);
@@ -58,9 +53,7 @@ async function getAnalytics(req, res) {
      });
 }
 
-
 module.exports = {
      createNewUrl, 
      getAnalytics,
-
 };

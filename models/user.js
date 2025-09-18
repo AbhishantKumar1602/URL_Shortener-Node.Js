@@ -1,4 +1,5 @@
 const moongoose = require('mongoose');
+
 const userSchema = new moongoose.Schema({
      name: {
           type: String,

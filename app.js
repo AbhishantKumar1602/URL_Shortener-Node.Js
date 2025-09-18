@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const { connectToMongoDB } = require ('./connect')
 const URL = require('./models/url');
 const { checkForAuth,restrictTo, } = require('./middlewares/auth');
+const Mongo_Url = 'mongodb+srv://root:1602@akmongo.sya0hez.mongodb.net/Custom_URL_Shortener?retryWrites=true&w=majority&appName=AkMongo';
 
 const urlRoute = require('./routes/url');
 const staticRoute = require('./routes/staticRouter');
@@ -15,7 +16,7 @@ const port = 3001
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
 
-connectToMongoDB('mongodb+srv://root:1602@akmongo.sya0hez.mongodb.net/Custom_URL_Shortener?retryWrites=true&w=majority&appName=AkMongo')
+connectToMongoDB(Mongo_Url)
      .then(() => console.log("MongoDB Connected!"))
      .catch((err) => console.error("MongoDB Connection Error:", err));
 

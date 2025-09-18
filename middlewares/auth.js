@@ -1,18 +1,11 @@
 const { getUser } = require("../service/auth");
 
 const checkForAuth = (req, res, next) => {
-     // const authHeader = req.headers["authorization"];
      const tokenCookie = req.cookies["token"];
-     
      req.user = null;
-
-     // if (!authHeader || !authHeader.startsWith('Bearer '))
-     //      return next();
      if (!tokenCookie)
           return next();
 
-
-     // const token = authHeader.split("Bearer ")[1];
      const token = tokenCookie;
      if (!token)
           return next();
@@ -35,5 +28,4 @@ function restrictTo(roles= []) {
 module.exports = {
      checkForAuth,
      restrictTo,
-
 }
