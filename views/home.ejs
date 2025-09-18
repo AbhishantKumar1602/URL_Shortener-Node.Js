@@ -360,7 +360,9 @@
                <% if(locals.shortId) { %>
                     <div class="result">
                          <p>🎉 Your short URL is ready:</p>
-                         <a href="http://localhost:3001/url/<%= shortId %>" target="_blank">http://localhost:3001/url/<%= shortId %></a>
+                              <a href="<%= BASE_URL %>/url/<%= shortId %>" target="_blank">
+                                   <%= BASE_URL %>/url/<%= shortId %>
+                              </a>
                     </div>
                <% } %>
           </div>
@@ -382,7 +384,8 @@
                                   <% locals.urls.forEach(function(url, index) { %>
                                        <tr>
                                             <td><%= index + 1 %></td>
-                                            <td><a href="http://localhost:3001/url/<%= url.shortId %>" target="_blank" class="short-link"><%= url.shortId %></a></td>
+                                            <td><a href="<%= BASE_URL %>/url/<%= url.shortId %>" target="_blank">
+                                                  <%= BASE_URL %>/url/<%= url.shortId %></a></td>
                                             <td>
                                                  <span class="redirect-url" title="<%= url.redirectionUrl %>">
                                                       <% if (url.redirectionUrl.length > 40) { %>

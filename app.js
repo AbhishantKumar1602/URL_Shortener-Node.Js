@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,8 @@ const port = process.env.PORT || 3001;
 
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
+app.locals.BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
+
 
 connectToMongoDB(Mongo_Url)
      .then(() => console.log("MongoDB Connected!"))
@@ -50,5 +53,6 @@ app.use('/url/:shortId', async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
-})
+  const baseUrl = process.env.BASE_URL || `http://localhost:${port}`;
+  console.log(`✅ Server running at ${baseUrl}`);
+});
