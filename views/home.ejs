@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>URL Shortener</title>
+     <style>
+          * {
+               margin: 0;
+               padding: 0;
+               box-sizing: border-box;
+          }
+
+          body {
+               font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+               min-height: 100vh;
+               padding: 20px;
+               color: #1a202c;
+          }
+
+          .main-container {
+               max-width: 900px;
+               margin: 0 auto;
+               padding: 40px 0;
+          }
+
+          h1 {
+               text-align: center;
+               color: white;
+               font-size: clamp(2rem, 5vw, 3.5rem);
+               font-weight: 700;
+               margin-bottom: 8px;
+               text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          }
+
+          .subtitle {
+               text-align: center;
+               color: rgba(255,255,255,0.8);
+               font-size: 1.1rem;
+               margin-bottom: 40px;
+               font-weight: 400;
+          }
+
+          .glass-container {
+               background: rgba(255, 255, 255, 0.95);
+               backdrop-filter: blur(20px);
+               border-radius: 24px;
+               border: 1px solid rgba(255, 255, 255, 0.2);
+               box-shadow: 
+                    0 20px 40px rgba(0,0,0,0.1),
+                    0 8px 25px rgba(0,0,0,0.05);
+               padding: 40px;
+               margin-bottom: 30px;
+               transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          .glass-container:hover {
+               transform: translateY(-2px);
+               box-shadow: 
+                    0 25px 50px rgba(0,0,0,0.15),
+                    0 12px 30px rgba(0,0,0,0.08);
+          }
+
+          .input-group {
+               position: relative;
+               margin-bottom: 30px;
+          }
+
+          label {
+               display: block;
+               font-weight: 600;
+               margin-bottom: 12px;
+               color: #2d3748;
+               font-size: 1rem;
+          }
+
+          .input-wrapper {
+               position: relative;
+               display: flex;
+               align-items: center;
+               background: #f7fafc;
+               border: 2px solid #e2e8f0;
+               border-radius: 16px;
+               transition: all 0.3s ease;
+               overflow: hidden;
+          }
+
+          .input-wrapper:focus-within {
+               border-color: #667eea;
+               background: white;
+               box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          }
+
+          input[type="text"] {
+               flex: 1;
+               padding: 18px 20px;
+               border: none;
+               background: transparent;
+               font-size: 16px;
+               outline: none;
+               color: #2d3748;
+          }
+
+          input[type="text"]::placeholder {
+               color: #a0aec0;
+          }
+
+          .url-icon {
+               padding: 0 15px;
+               color: #a0aec0;
+               font-size: 20px;
+          }
+
+          .submit-btn {
+               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+               color: white;
+               border: none;
+               border-radius: 16px;
+               padding: 18px 40px;
+               font-size: 16px;
+               font-weight: 600;
+               cursor: pointer;
+               transition: all 0.3s ease;
+               box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+               position: relative;
+               overflow: hidden;
+               width: 100%;
+          }
+
+          .submit-btn::before {
+               content: '';
+               position: absolute;
+               top: 0;
+               left: -100%;
+               width: 100%;
+               height: 100%;
+               background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+               transition: left 0.5s;
+          }
+
+          .submit-btn:hover::before {
+               left: 100%;
+          }
+
+          .submit-btn:hover {
+               transform: translateY(-2px);
+               box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+          }
+
+          .submit-btn:active {
+               transform: translateY(0);
+          }
+
+          .result {
+               margin-top: 30px;
+               padding: 24px;
+               background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+               border-radius: 16px;
+               color: white;
+               animation: slideIn 0.5s ease;
+               box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+          }
+
+          @keyframes slideIn {
+               from {
+                    opacity: 0;
+                    transform: translateY(20px);
+               }
+               to {
+                    opacity: 1;
+                    transform: translateY(0);
+               }
+          }
+
+          .result p {
+               font-size: 16px;
+               margin-bottom: 12px;
+               font-weight: 500;
+          }
+
+          .result a {
+               color: #f0fff4;
+               font-weight: 700;
+               text-decoration: none;
+               background: rgba(255,255,255,0.1);
+               padding: 8px 16px;
+               border-radius: 8px;
+               border: 1px solid rgba(255,255,255,0.2);
+               display: inline-block;
+               transition: all 0.3s ease;
+               word-break: break-all;
+          }
+
+          .result a:hover {
+               background: rgba(255,255,255,0.2);
+               transform: translateY(-1px);
+          }
+
+          .urls-section h2 {
+               color: #2d3748;
+               font-size: 1.8rem;
+               font-weight: 700;
+               margin-bottom: 24px;
+               text-align: center;
+          }
+
+          .table-container {
+               overflow-x: auto;
+               border-radius: 16px;
+               background: white;
+               box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+          }
+
+          table {
+               width: 100%;
+               border-collapse: collapse;
+          }
+
+          thead {
+               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+               color: white;
+          }
+
+          th {
+               padding: 20px 24px;
+               text-align: left;
+               font-weight: 600;
+               font-size: 14px;
+               text-transform: uppercase;
+               letter-spacing: 0.5px;
+          }
+
+          td {
+               padding: 20px 24px;
+               border-bottom: 1px solid #f1f5f9;
+               font-size: 15px;
+               vertical-align: middle;
+          }
+
+          tbody tr {
+               transition: all 0.3s ease;
+          }
+
+          tbody tr:hover {
+               background: #f8fafc;
+               transform: scale(1.01);
+          }
+
+          .short-link {
+               color: #667eea;
+               text-decoration: none;
+               font-weight: 600;
+               padding: 6px 12px;
+               background: rgba(102, 126, 234, 0.1);
+               border-radius: 8px;
+               transition: all 0.3s ease;
+               display: inline-block;
+          }
+
+          .short-link:hover {
+               background: rgba(102, 126, 234, 0.2);
+               transform: translateY(-1px);
+          }
+
+          .click-count {
+               background: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+               color: white;
+               padding: 6px 12px;
+               border-radius: 20px;
+               font-size: 13px;
+               font-weight: 600;
+               text-align: center;
+               min-width: 40px;
+               display: inline-block;
+          }
+
+          .redirect-url {
+               color: #4a5568;
+               max-width: 250px;
+               word-break: break-word;
+               font-family: 'Monaco', 'Menlo', monospace;
+               font-size: 13px;
+               background: #f7fafc;
+               padding: 6px 10px;
+               border-radius: 6px;
+               cursor: help;
+               transition: all 0.3s ease;
+          }
+
+          .redirect-url:hover {
+               background: #e2e8f0;
+               transform: scale(1.02);
+          }
+
+          .empty-state {
+               text-align: center;
+               padding: 60px 20px;
+               color: #718096;
+          }
+
+          .empty-state-icon {
+               font-size: 4rem;
+               margin-bottom: 16px;
+               opacity: 0.5;
+          }
+
+          @media (max-width: 768px) {
+               .glass-container {
+                    padding: 24px;
+                    margin: 0 10px 20px 10px;
+               }
+
+               .main-container {
+                    padding: 20px 0;
+               }
+
+               th, td {
+                    padding: 12px 16px;
+                    font-size: 13px;
+               }
+
+               .redirect-url {
+                    max-width: 120px;
+               }
+          }
+
+          @media (max-width: 480px) {
+               .table-container {
+                    font-size: 12px;
+               }
+               
+               th, td {
+                    padding: 8px 12px;
+               }
+
+               .redirect-url {
+                    max-width: 80px;
+               }
+          }
+     </style>
+</head>
+<body>
+     <div class="main-container">
+          <h1>🔗 ShortLink</h1>
+          <p class="subtitle">Transform your long URLs into clean, shareable links</p>
+
+          <div class="glass-container">
+               <form action="/url" method="post">
+                    <div class="input-group">
+                         <label for="url">Enter Your URL</label>
+                         <div class="input-wrapper">
+                              <span class="url-icon">🌐</span>
+                              <input type="text" name="url" id="url" placeholder="https://www.example.com/very/long/url/path">
+                         </div>
+                    </div>
+                    <button type="submit" class="submit-btn">✨ Generate Short URL</button>
+               </form>
+               
+               <% if(locals.shortId) { %>
+                    <div class="result">
+                         <p>🎉 Your short URL is ready:</p>
+                         <a href="http://localhost:3001/url/<%= shortId %>" target="_blank">http://localhost:3001/url/<%= shortId %></a>
+                    </div>
+               <% } %>
+          </div>
+
+          <% if(locals.urls && locals.urls.length > 0) { %>
+               <div class="glass-container urls-section">
+                    <h2>📊 Your URLs</h2>
+                    <div class="table-container">
+                         <table>
+                              <thead>
+                                   <tr>
+                                        <th>#</th>
+                                        <th>Short Link</th>
+                                        <th>Original URL</th>
+                                        <th>Clicks</th>
+                                   </tr>
+                              </thead>
+                              <tbody>
+                                  <% locals.urls.forEach(function(url, index) { %>
+                                       <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><a href="http://localhost:3001/url/<%= url.shortId %>" target="_blank" class="short-link"><%= url.shortId %></a></td>
+                                            <td>
+                                                 <span class="redirect-url" title="<%= url.redirectionUrl %>">
+                                                      <% if (url.redirectionUrl.length > 40) { %>
+                                                          <%= url.redirectionUrl.substring(0, 40) %>  .....
+                                                      <% } else { %>
+                                                          <%= url.redirectionUrl %>
+                                                      <% } %>
+                                                 </span>
+                                            </td>
+                                            <td><span class="click-count"><%= url.visitHistory.length %></span></td>
+                                       </tr>
+                                  <% }) %>  
+                              </tbody>     
+                         </table>
+                    </div>
+               </div>
+          <% } else { %>
+               <div class="glass-container">
+                    <div class="empty-state">
+                         <div class="empty-state-icon">📝</div>
+                         <p>No URLs created yet. Start by shortening your first link above!</p>
+                    </div>
+               </div>
+          <% } %>     
+     </div>
+</body>
+</html>

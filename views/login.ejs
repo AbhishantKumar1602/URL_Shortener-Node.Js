@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Log In - ShortLink</title>
+     <style>
+          * {
+               margin: 0;
+               padding: 0;
+               box-sizing: border-box;
+          }
+
+          body {
+               font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+               min-height: 100vh;
+               padding: 20px;
+               color: #1a202c;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+          }
+
+          .main-container {
+               max-width: 500px;
+               width: 100%;
+               margin: 0 auto;
+               padding: 40px 0;
+          }
+
+          h1 {
+               text-align: center;
+               color: white;
+               font-size: clamp(2rem, 5vw, 3rem);
+               font-weight: 700;
+               margin-bottom: 8px;
+               text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          }
+
+          .subtitle {
+               text-align: center;
+               color: rgba(255,255,255,0.8);
+               font-size: 1.1rem;
+               margin-bottom: 40px;
+               font-weight: 400;
+          }
+
+          .glass-container {
+               background: rgba(255, 255, 255, 0.95);
+               backdrop-filter: blur(20px);
+               border-radius: 24px;
+               border: 1px solid rgba(255, 255, 255, 0.2);
+               box-shadow: 
+                    0 20px 40px rgba(0,0,0,0.1),
+                    0 8px 25px rgba(0,0,0,0.05);
+               padding: 40px;
+               margin-bottom: 30px;
+               transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          .glass-container:hover {
+               transform: translateY(-2px);
+               box-shadow: 
+                    0 25px 50px rgba(0,0,0,0.15),
+                    0 12px 30px rgba(0,0,0,0.08);
+          }
+
+          .error-message {
+               background-color: #f8d7da;
+               color: #721c24;
+               border: 1px solid #f5c6cb;
+               padding: 15px;
+               border-radius: 16px;
+               margin-bottom: 20px;
+               text-align: center;
+          }
+
+          .input-group {
+               position: relative;
+               margin-bottom: 25px;
+          }
+
+          label {
+               display: block;
+               font-weight: 600;
+               margin-bottom: 12px;
+               color: #2d3748;
+               font-size: 1rem;
+          }
+
+          .input-wrapper {
+               position: relative;
+               display: flex;
+               align-items: center;
+               background: #f7fafc;
+               border: 2px solid #e2e8f0;
+               border-radius: 16px;
+               transition: all 0.3s ease;
+               overflow: hidden;
+          }
+
+          .input-wrapper:focus-within {
+               border-color: #667eea;
+               background: white;
+               box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+          }
+
+          input[type="text"],
+          input[type="email"],
+          input[type="password"] {
+               flex: 1;
+               padding: 18px 20px;
+               border: none;
+               background: transparent;
+               font-size: 16px;
+               outline: none;
+               color: #2d3748;
+          }
+
+          input::placeholder {
+               color: #a0aec0;
+          }
+
+          .input-icon {
+               padding: 0 15px;
+               color: #a0aec0;
+               font-size: 20px;
+          }
+
+          .submit-btn {
+               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+               color: white;
+               border: none;
+               border-radius: 16px;
+               padding: 18px 40px;
+               font-size: 16px;
+               font-weight: 600;
+               cursor: pointer;
+               transition: all 0.3s ease;
+               box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+               position: relative;
+               overflow: hidden;
+               width: 100%;
+               margin-top: 10px;
+          }
+
+          .submit-btn::before {
+               content: '';
+               position: absolute;
+               top: 0;
+               left: -100%;
+               width: 100%;
+               height: 100%;
+               background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+               transition: left 0.5s;
+          }
+
+          .submit-btn:hover::before {
+               left: 100%;
+          }
+
+          .submit-btn:hover {
+               transform: translateY(-2px);
+               box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+          }
+
+          .submit-btn:active {
+               transform: translateY(0);
+          }
+
+          .login-link {
+               text-align: center;
+               margin-top: 20px;
+               color: #4a5568;
+          }
+
+          .login-link a {
+               color: #667eea;
+               font-weight: 600;
+               text-decoration: none;
+          }
+
+          .login-link a:hover {
+               text-decoration: underline;
+          }
+
+          @media (max-width: 768px) {
+               .glass-container {
+                    padding: 24px;
+                    margin: 0 10px 20px 10px;
+               }
+
+               .main-container {
+                    padding: 20px 0;
+               }
+          }
+     </style>
+</head>
+<body>
+     <div class="main-container">
+          <h1>Log In to Your Account</h1>
+          <p class="subtitle">Welcome back! Access your shortened URLs.</p>
+
+          <div class="glass-container">
+               <% if (typeof error !== 'undefined' && error) { %>
+                    <p class="error-message"><%= error %></p>
+               <% } %>
+               <form action="/user/login" method="POST">
+                    <div class="input-group">
+                         <label for="email">Email</label>
+                         <div class="input-wrapper">
+                              <span class="input-icon">✉️</span>
+                              <input type="email" name="email" id="email" placeholder="you@example.com" required>
+                         </div>
+                    </div>
+                    <div class="input-group">
+                         <label for="password">Password</label>
+                         <div class="input-wrapper">
+                              <span class="input-icon">🔒</span>
+                              <input type="password" name="password" id="password" placeholder="••••••••" required>
+                         </div>
+                    </div>
+                    <button type="submit" class="submit-btn">✨ Log In</button>
+               </form>
+               <div class="login-link">
+                    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+               </div>
+          </div>
+     </div>
+</body>
+</html>
