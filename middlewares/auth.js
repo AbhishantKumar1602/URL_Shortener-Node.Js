@@ -1,13 +1,19 @@
 const { getUser } = require("../service/auth");
 
 const checkForAuth = (req, res, next) => {
-     const authHeader = req.headers["authorization"];
+     // const authHeader = req.headers["authorization"];
+     const tokenCookie = req.cookies["token"];
+     
      req.user = null;
 
-     if (!authHeader || !authHeader.startsWith('Bearer '))
+     // if (!authHeader || !authHeader.startsWith('Bearer '))
+     //      return next();
+     if (!tokenCookie)
           return next();
 
-     const token = authHeader.split("Bearer ")[1];
+
+     // const token = authHeader.split("Bearer ")[1];
+     const token = tokenCookie;
      if (!token)
           return next();
 

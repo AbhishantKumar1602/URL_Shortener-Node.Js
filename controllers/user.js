@@ -21,8 +21,9 @@ async function userLogin(req, res) {
                error: "Invalid Credential"
           });
      
-     const token = setUser(user);     
-     return res.json({token})
+     const token = setUser(user);  
+     res.cookie("token", token);   
+     return res.redirect("/");
      
 }
 
