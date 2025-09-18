@@ -4,14 +4,14 @@ const cookieParser = require('cookie-parser');
 const { connectToMongoDB } = require ('./connect')
 const URL = require('./models/url');
 const { checkForAuth,restrictTo, } = require('./middlewares/auth');
-const Mongo_Url = 'mongodb+srv://root:1602@akmongo.sya0hez.mongodb.net/Custom_URL_Shortener?retryWrites=true&w=majority&appName=AkMongo';
+const Mongo_Url = process.env.MONGO_URL ||'mongodb+srv://root:1602@akmongo.sya0hez.mongodb.net/Custom_URL_Shortener?retryWrites=true&w=majority&appName=AkMongo';
 
 const urlRoute = require('./routes/url');
 const staticRoute = require('./routes/staticRouter');
 const userRoute = require('./routes/user');
 
 const app = express();
-const port = 3001
+const port = process.env.PORT || 3001;
 
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
