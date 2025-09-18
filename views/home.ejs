@@ -384,7 +384,7 @@
                                   <% locals.urls.forEach(function(url, index) { %>
                                        <tr>
                                             <td><%= index + 1 %></td>
-                                            <td><a href="<%= BASE_URL %>/url/<%= url.shortId %>" target="_blank">
+                                            <td><a href="<%= BASE_URL %>/url/<%= url.shortId %>" target="_blank" class="short-link">
                                                   <%= BASE_URL %>/url/<%= url.shortId %></a></td>
                                             <td>
                                                  <span class="redirect-url" title="<%= url.redirectionUrl %>">
